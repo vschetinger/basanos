@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.link {
+  fill: none;
+  stroke: #666;
+  stroke-width: 1.5px;
+}
+
+#licensing {
+  fill: red;
+}
+
+.link.licensing {
+  stroke: red;
+  stroke-dasharray: 0,2 1;
+}
+
+#suit {
+  fill: green;
+}
+
+.link.suit {
+  stroke: green;
+  stroke-dasharray: 0,2 1;
+}
+
+#resolved {
+  fill: black;
+}
+.link.resolved {
+  stroke: black;
+}
+
+circle {
+  fill: #ccc;
+  stroke: #333;
+  stroke-width: 1.5px;
+}
+
+text {
+  font: 10px sans-serif;
+  pointer-events: none;
+  text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+}
+
+</style>
+<body>
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script>
+
+var links =  [{"source": "DEATH", "type": "licensing", "target": "THE FOOL"}, {"source": "DEATH", "type": "licensing", "target": "THE EMPRESS"}, {"source": "DEATH", "type": "licensing", "target": "JUDGEMENT"}, {"source": "THE EMPRESS", "type": "licensing", "target": "THE EMPEROR"}, {"source": "THE EMPRESS", "type": "licensing", "target": "DEATH"}, {"source": "STRENGTH", "type": "licensing", "target": "THE CHARIOT"}, {"source": "THE LOVERS", "type": "licensing", "target": "THE HIEROPHANT"}, {"source": "THE LOVERS", "type": "licensing", "target": "THE HERMIT"}, {"source": "JUDGEMENT", "type": "licensing", "target": "DEATH"}, {"source": "THE MAGICIAN", "type": "licensing", "target": "THE HIGH PRIESTESS"}, {"source": "THE MAGICIAN", "type": "licensing", "target": "THE HANGED MAN"}, {"source": "THE HANGED MAN", "type": "licensing", "target": "THE MAGICIAN"}, {"source": "THE HANGED MAN", "type": "licensing", "target": "THE CHARIOT"}, {"source": "THE HIEROPHANT", "type": "licensing", "target": "THE FOOL"}, {"source": "THE HIEROPHANT", "type": "licensing", "target": "THE LOVERS"}, {"source": "THE CHARIOT", "type": "licensing", "target": "STRENGTH"}, {"source": "THE CHARIOT", "type": "licensing", "target": "THE HANGED MAN"}, {"source": "THE CHARIOT", "type": "licensing", "target": "THE TOWER"}, {"source": "TEMPERANCE", "type": "licensing", "target": "THE TOWER"}, {"source": "THE FOOL", "type": "licensing", "target": "THE HIEROPHANT"}, {"source": "THE FOOL", "type": "licensing", "target": "DEATH"}, {"source": "THE FOOL", "type": "licensing", "target": "THE DEVIL"}, {"source": "THE HIGH PRIESTESS", "type": "licensing", "target": "THE MAGICIAN"}, {"source": "THE SUN", "type": "licensing", "target": "THE MOON"}, {"source": "THE TOWER", "type": "licensing", "target": "THE CHARIOT"}, {"source": "THE TOWER", "type": "licensing", "target": "TEMPERANCE"}, {"source": "THE TOWER", "type": "licensing", "target": "THE STAR"}, {"source": "THE MOON", "type": "licensing", "target": "THE STAR"}, {"source": "THE MOON", "type": "licensing", "target": "THE SUN"}, {"source": "THE EMPEROR", "type": "licensing", "target": "THE EMPRESS"}, {"source": "THE STAR", "type": "licensing", "target": "THE DEVIL"}, {"source": "THE STAR", "type": "licensing", "target": "THE TOWER"}, {"source": "THE STAR", "type": "licensing", "target": "THE MOON"}, {"source": "THE WORLD", "type": "licensing", "target": "THE HERMIT"}, {"source": "THE DEVIL", "type": "licensing", "target": "THE FOOL"}, {"source": "THE DEVIL", "type": "licensing", "target": "THE STAR"}, {"source": "THE HERMIT", "type": "licensing", "target": "THE LOVERS"}, {"source": "THE HERMIT", "type": "licensing", "target": "THE WORLD"}, {"source": "DEATH", "type": "suit", "target": "THE TOWER"}, {"source": "THE EMPRESS", "type": "suit", "target": "THE LOVERS"}, {"source": "THE EMPRESS", "type": "suit", "target": "THE STAR"}, {"source": "STRENGTH", "type": "suit", "target": "THE HANGED MAN"}, {"source": "THE LOVERS", "type": "suit", "target": "THE EMPRESS"}, {"source": "JUDGEMENT", "type": "suit", "target": "THE FOOL"}, {"source": "JUDGEMENT", "type": "suit", "target": "JUSTICE"}, {"source": "THE MAGICIAN", "type": "suit", "target": "THE CHARIOT"}, {"source": "THE HANGED MAN", "type": "suit", "target": "THE FOOL"}, {"source": "THE HANGED MAN", "type": "suit", "target": "THE HIGH PRIESTESS"}, {"source": "THE HANGED MAN", "type": "suit", "target": "STRENGTH"}, {"source": "THE HIEROPHANT", "type": "suit", "target": "THE EMPEROR"}, {"source": "THE CHARIOT", "type": "suit", "target": "THE MAGICIAN"}, {"source": "TEMPERANCE", "type": "suit", "target": "THE WORLD"}, {"source": "THE FOOL", "type": "suit", "target": "THE HANGED MAN"}, {"source": "THE FOOL", "type": "suit", "target": "THE STAR"}, {"source": "THE FOOL", "type": "suit", "target": "JUDGEMENT"}, {"source": "JUSTICE", "type": "suit", "target": "THE EMPEROR"}, {"source": "JUSTICE", "type": "suit", "target": "JUDGEMENT"}, {"source": "THE HIGH PRIESTESS", "type": "suit", "target": "THE HERMIT"}, {"source": "THE HIGH PRIESTESS", "type": "suit", "target": "THE HANGED MAN"}, {"source": "THE SUN", "type": "suit", "target": "THE TOWER"}, {"source": "THE SUN", "type": "suit", "target": "THE WORLD"}, {"source": "THE TOWER", "type": "suit", "target": "DEATH"}, {"source": "THE TOWER", "type": "suit", "target": "THE SUN"}, {"source": "THE EMPEROR", "type": "suit", "target": "THE HIEROPHANT"}, {"source": "THE EMPEROR", "type": "suit", "target": "JUSTICE"}, {"source": "THE STAR", "type": "suit", "target": "THE FOOL"}, {"source": "THE STAR", "type": "suit", "target": "THE EMPRESS"}, {"source": "THE WORLD", "type": "suit", "target": "TEMPERANCE"}, {"source": "THE WORLD", "type": "suit", "target": "THE SUN"}, {"source": "THE HERMIT", "type": "suit", "target": "THE HIGH PRIESTESS"}, {"source": "THE FOOL", "type": "resolved", "target": "THE MAGICIAN"}, {"source": "THE MAGICIAN", "type": "resolved", "target": "THE HIGH PRIESTESS"}, {"source": "THE HIGH PRIESTESS", "type": "resolved", "target": "THE EMPRESS"}, {"source": "THE EMPRESS", "type": "resolved", "target": "THE EMPEROR"}, {"source": "THE EMPEROR", "type": "resolved", "target": "THE HIEROPHANT"}, {"source": "THE HIEROPHANT", "type": "resolved", "target": "THE LOVERS"}, {"source": "THE LOVERS", "type": "resolved", "target": "THE CHARIOT"}, {"source": "THE CHARIOT", "type": "resolved", "target": "STRENGTH"}, {"source": "STRENGTH", "type": "resolved", "target": "THE HERMIT"}, {"source": "THE HERMIT", "type": "resolved", "target": "JUSTICE"}, {"source": "JUSTICE", "type": "resolved", "target": "WHEEL OF FORTUNE"}, {"source": "WHEEL OF FORTUNE", "type": "resolved", "target": "THE HANGED MAN"}, {"source": "THE HANGED MAN", "type": "resolved", "target": "DEATH"}, {"source": "DEATH", "type": "resolved", "target": "TEMPERANCE"}, {"source": "TEMPERANCE", "type": "resolved", "target": "THE DEVIL"}, {"source": "THE DEVIL", "type": "resolved", "target": "THE TOWER"}, {"source": "THE TOWER", "type": "resolved", "target": "THE STAR"}, {"source": "THE STAR", "type": "resolved", "target": "THE MOON"}, {"source": "THE MOON", "type": "resolved", "target": "THE SUN"}, {"source": "THE SUN", "type": "resolved", "target": "JUDGEMENT"}, {"source": "JUDGEMENT", "type": "resolved", "target": "THE WORLD"}] ;var nodes = {};
+
+// Compute the distinct nodes from the links.
+links.forEach(function(link) {
+  link.source = nodes[link.source] || (nodes[link.source] = {name: link.source});
+  link.target = nodes[link.target] || (nodes[link.target] = {name: link.target});
+});
+
+var width = 1500,
+    height = 1000;
+
+var force = d3.layout.force()
+    .nodes(d3.values(nodes))
+    .links(links)
+    .size([width, height])
+    .linkDistance(300)
+    .charge(-500)
+    .on("tick", tick)
+    .start();
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+// Per-type markers, as they don't inherit styles.
+svg.append("defs").selectAll("marker")
+    .data(["suit", "licensing", "resolved"])
+  .enter().append("marker")
+    .attr("id", function(d) { return d; })
+    .attr("viewBox", "0 -5 10 10")
+    .attr("refX", 15)
+    .attr("refY", -1.5)
+    .attr("markerWidth", 6)
+    .attr("markerHeight", 6)
+    .attr("orient", "auto")
+  .append("path")
+    .attr("d", "M0,-5L10,0L0,5");
+
+var path = svg.append("g").selectAll("path")
+    .data(force.links())
+  .enter().append("path")
+    .attr("class", function(d) { return "link " + d.type; })
+    .attr("marker-end", function(d) { return "url(#" + d.type + ")"; });
+
+var circle = svg.append("g").selectAll("circle")
+    .data(force.nodes())
+  .enter().append("circle")
+    .attr("r", 6)
+    .call(force.drag);
+
+var text = svg.append("g").selectAll("text")
+    .data(force.nodes())
+  .enter().append("text")
+    .attr("x", 8)
+    .attr("y", ".31em")
+    .text(function(d) { return d.name; });
+
+// Use elliptical arc path segments to doubly-encode directionality.
+function tick() {
+  path.attr("d", linkArc);
+  circle.attr("transform", transform);
+  text.attr("transform", transform);
+}
+
+function linkArc(d) {
+  var dx = d.target.x - d.source.x,
+      dy = d.target.y - d.source.y,
+      dr = Math.sqrt(dx * dx + dy * dy);
+  return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
+}
+
+function transform(d) {
+  return "translate(" + d.x + "," + d.y + ")";
+}
+
+</script>
